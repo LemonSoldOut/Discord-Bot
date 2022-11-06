@@ -249,6 +249,6 @@ async def on_message(message):
         
 # Discord Bot Token
 # Read from Token.txt file and keep it safe
-token_file = open("./Token.txt", "r")
+token_file = open("./configs/Token.txt", "r")
 token = token_file.read()
 client.run(token)
