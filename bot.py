@@ -18,7 +18,7 @@ from discord.ext import commands
 
 import datetime
 import os
-
+import yaml
 
 from Functions import league
 from Functions import helpCommand
@@ -296,6 +296,10 @@ async def on_message(message):
         
 # Discord Bot Token
 # Read from Token.txt file and keep it safe
-token_file = open("./config/Token.txt", "r")
-token = token_file.read()
+# token_file = open("./config/Token.txt", "r")
+# token = token_file.read()
+with open('./config/config.yaml') as file:
+    config = yaml.safe_load(file)
+
+token = config['config']['discord']
 client.run(token)
