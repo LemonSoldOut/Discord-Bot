@@ -21,6 +21,7 @@ import os
 
 
 from Functions import league
+from Functions import helpCommand
 # Version
 version = 'beta-0.1'
 teamT1 = 0
@@ -51,27 +52,13 @@ async def on_ready():
 async def on_message(message):
     teamT1 = 0
     teamDRX = 0
-    
-    
-    
+  
     if message.author == client.user:
         return
     
     if message.content.startswith('$'):
-        if message.content.startswith('$help'):
-            help_msg = """
-            === 食用手册 ===
-1. $help\t查康指令
-2. $welcome | $hello\t欢迎用语
-3. $daily\t每日摸鱼!
-4. $yyds\t凯老师 yyds!
-5. $join\t追随比老师, 加入光荣的进化吧!
--------------------- TODO --------------------
-6. $match 召唤师名称\t查看当前召唤师对局信息
-7. $info\t查看当前发出消息者的对应联盟账号信息
-8. $game\t小游戏合集 
-
-            """
+        if '$help' in message.content:
+            help_msg = helpCommand.help(message.content)
             await message.channel.send(help_msg)        
         
         elif message.content.startswith('$welcome') or message.content.startswith('$hello'):
@@ -238,34 +225,64 @@ async def on_message(message):
             
             await message.channel.send(view = view)
         
-        elif message.content.startswith('$lol'):# Lemon Sodà
+        elif message.content.startswith('$info'):# Lemon Sodà
             
-            name = message.content.split("$lol")[1]
-            msg = league.showTargetAccRankInfo(name)
+            name = message.content.split("$info")[1]
+            msg = league.displayTargetAccRankInfo(name)
             if "Not Found" not in msg:    
-                result = "==================== 🔥 账户信息 🔥 ====================\n<:transblanket:1039999774356688966> 账号: {0}\n<:lvl:1039999260541857832> 等级: {1}".format(msg['用户名'], msg['等级'])
+                result = "==================== 🔥 ID: {0}\t账户信息 🔥 ====================\n<:transblanket:1039999774356688966> 账号: {1}\n<:lvl:1039999260541857832> 等级: {2}".format(name, msg['用户名'], msg['等级'])
                 
                 if 'SOLO' in msg:
-                    result = result + "\n++++++++++  单双排位  ++++++++++\n{0}\n<a:AnyaYay:1040000061033168978> 赢: {1}\n<a:UmaruChanCry:1040000749100343316> 输: {2}\n<:percent:1040001016759861379> 胜率: {3}".format(msg['SOLO']['单双'], msg['SOLO']['赢'],msg['SOLO']['输'],msg['SOLO']['胜率'])
+                    result = result + "\n++++++++++  单双  ++++++++++\n{0}\n<a:AnyaYay:1040000061033168978> 赢: {1}\n<a:UmaruChanCry:1040000749100343316> 输: {2}\n<:percent:1040001016759861379> 胜率: {3}".format(msg['SOLO']['单双'], msg['SOLO']['赢'],msg['SOLO']['输'],msg['SOLO']['胜率'])
                 else:
-                    result = result + "\n++++++++++  没有足够的单双排位记录  ++++++++++"
+                    result = result + "\n++++++++++  单双  ++++++++++\nUnranked"
                 
                 if 'FLEX' in msg:
                     win = "<a:AnyaYay:1040000061033168978>"
-                    result = result + "\n++++++++++  灵活排位  ++++++++++\n{0}\n<a:AnyaYay:1040000061033168978> 赢: {1}\n<a:UmaruChanCry:1040000749100343316> 输: {2}\n<:percent:1040001016759861379> 胜率: {3}".format(msg['FLEX']['灵活'], msg['FLEX']['赢'],msg['FLEX']['输'],msg['FLEX']['胜率'])
+                    result = result + "\n++++++++++  灵活  ++++++++++\n{0}\n<a:AnyaYay:1040000061033168978> 赢: {1}\n<a:UmaruChanCry:1040000749100343316> 输: {2}\n<:percent:1040001016759861379> 胜率: {3}".format(msg['FLEX']['灵活'], msg['FLEX']['赢'],msg['FLEX']['输'],msg['FLEX']['胜率'])
                 
                 else:
-                    result = result + "\n++++++++++  没有足够的灵活排位记录  ++++++++++"
+                    result = result + "\n++++++++++  灵活  ++++++++++\nUnranked"
                 
-                result = result + "\n==================== 🔥 账户信息 🔥 ===================="
+                result = result + "\n==================== 🔥 ID: {0}\t账户信息 🔥 ====================".format(name)
                 await message.channel.send(result)
                 
             else:
                 await message.channel.send('未找到相关账号，请仔细检查~')
                 
-        elif message.content.startswith('$icon'):
-            icon_url = "https://cdn.discordapp.com/emojis/577910564773429278.webp?size=56&quality=lossless"
-            await message.channel.send(icon_url)   
+        elif message.content.startswith('$match'):
+            name = message.content.split("$match")[1]
+            msg = league.displayCurrentMatchPlayersInfo(name)
+            begin_result = "==================== 🔥 ID: {0}\t当前对局 🔥 ====================".format(name)
+            await message.channel.send(begin_result)
+            for i in msg:
+                
+                if "Not Found" not in msg[i]:    
+                    inner_result =  "\n<:transblanket:1039999774356688966> 账号: {0}\n<:lvl:1039999260541857832> 等级: {1}".format(msg[i]['用户名'], msg[i]['等级'])
+                    
+                    if 'SOLO' in msg[i]:
+                        inner_result = inner_result + "\n\n单双: {0}\n<a:AnyaYay:1040000061033168978> 赢: {1}\n<a:UmaruChanCry:1040000749100343316> 输: {2}\n<:percent:1040001016759861379> 胜率: {3}".format(msg[i]['SOLO']['单双'], msg[i]['SOLO']['赢'],msg[i]['SOLO']['输'],msg[i]['SOLO']['胜率'])
+                    else:
+                        inner_result = inner_result + "\n\n单双: Unranked"
+                    
+                    if 'FLEX' in msg[i]:
+                        win = "<a:AnyaYay:1040000061033168978>"
+                        inner_result = inner_result + "\n\n灵活: {0}\n<a:AnyaYay:1040000061033168978> 赢: {1}\n<a:UmaruChanCry:1040000749100343316> 输: {2}\n<:percent:1040001016759861379> 胜率: {3}".format(msg[i]['FLEX']['灵活'], msg[i]['FLEX']['赢'],msg[i]['FLEX']['输'],msg[i]['FLEX']['胜率'])
+                        await message.channel.send("--------------------------------------------------")
+                    else:
+                        inner_result = inner_result + "\n\n灵活: Unranked"
+                        await message.channel.send("--------------------------------------------------")
+                    
+                    await message.channel.send(inner_result)
+                    
+                else:
+                    await message.channel.send('未找到相关账号，请仔细检查~')
+            
+            
+            end_result = "\n==================== 🔥 ID: {0}\t当前对局 🔥 ====================".format(name)
+            
+            await message.channel.send(end_result)
+               
         else:
             await message.channel.send('抱歉还未学会这条命令~')
             
