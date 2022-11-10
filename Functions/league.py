@@ -14,15 +14,26 @@
 # import modules
 import requests
 import datetime
+import yaml
 import os
+
+abs_path = os.path.dirname(os.path.dirname((os.path.abspath(__file__))))
+
+# BUG: Windows path (not compatible for all platforms)
+
+config_file_path = abs_path + "\\config\\config.yaml"
+with open(config_file_path) as file:
+    config = yaml.safe_load(file)
+
+token = config['config']['lol']
 
 # Coding here
 def getLeagueAccountByName(name):
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35",
+    headers = {f"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35",
     "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
     "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
     "Origin": "https://developer.riotgames.com",
-    "X-Riot-Token": "RGAPI-e7a8a20f-6f25-4471-a7c8-b34ad5a73066"}
+    "X-Riot-Token": token}
     
     url = f'https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{name}'
     
@@ -37,7 +48,7 @@ def getLeagueAccountRankInfo(summoner_id):
     "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
     "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
     "Origin": "https://developer.riotgames.com",
-    "X-Riot-Token": "RGAPI-e7a8a20f-6f25-4471-a7c8-b34ad5a73066"}
+    "X-Riot-Token": token}
     
     url = f'https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/{summoner_id}'
     # url = 'https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/q9dWDdaT6Ctll-XnUecP1ubtwQSAu4qjA9UHv2V2LjRHgBA'
@@ -60,7 +71,7 @@ def getCurrentMatchPlayers(name):
         "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
         "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
         "Origin": "https://developer.riotgames.com",
-        "X-Riot-Token": "RGAPI-e7a8a20f-6f25-4471-a7c8-b34ad5a73066"
+        "X-Riot-Token": token
     }
     url=f"https://na1.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/{summoner_id}"
     
@@ -168,6 +179,7 @@ def displayCurrentMatchPlayersInfo(name):
 
     return result
 ##############################################################
-# print(getCurrentMatchPlayers("UtopiaZeta"))
+# print(type(token))
+# print(getLeagueAccountByName("UtopiaZeta"))
 # print()
 #print(displayCurrentMatchPlayersInfo("Maple Bookmark"))
