@@ -1,6 +1,6 @@
 .discord/
-logs/
-resources/
-data/
-config/
+log/*
+resource/*
+data/*
+config/*
 Functions/__pycache__/
