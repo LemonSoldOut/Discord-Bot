@@ -1,3 +1,5 @@
 .discord/
-discord-bot.log
-Token.txt
+logs/
+resources/
+data/
+config/
