@@ -6,9 +6,9 @@
 @Author: 今日摸鱼 
 @Email: lemonsoldout@163.com
 @Github: https://www.github.com/lemonsoldout
-@Package: Untitled-1
-@Version: v0.1
-@Description: 
+@Package: Discord-Bot
+@Version: beta-v0.1
+@Description: Discord 多功能机器人
 '''
 
 # import modules
@@ -19,6 +19,8 @@ from discord.ext import commands
 import datetime
 import os
 
+
+from Functions import league
 # Version
 version = 'beta-0.1'
 teamT1 = 0
@@ -235,7 +237,35 @@ async def on_message(message):
             view.add_item(selectMenu)
             
             await message.channel.send(view = view)
-             
+        
+        elif message.content.startswith('$lol'):# Lemon Sodà
+            
+            name = message.content.split("$lol")[1]
+            msg = league.showTargetAccRankInfo(name)
+            if "Not Found" not in msg:    
+                result = "==================== 🔥 账户信息 🔥 ====================\n<:transblanket:1039999774356688966> 账号: {0}\n<:lvl:1039999260541857832> 等级: {1}".format(msg['用户名'], msg['等级'])
+                
+                if 'SOLO' in msg:
+                    result = result + "\n++++++++++  单双排位  ++++++++++\n{0}\n<a:AnyaYay:1040000061033168978> 赢: {1}\n<a:UmaruChanCry:1040000749100343316> 输: {2}\n<:percent:1040001016759861379> 胜率: {3}".format(msg['SOLO']['单双'], msg['SOLO']['赢'],msg['SOLO']['输'],msg['SOLO']['胜率'])
+                else:
+                    result = result + "\n++++++++++  没有足够的单双排位记录  ++++++++++"
+                
+                if 'FLEX' in msg:
+                    win = "<a:AnyaYay:1040000061033168978>"
+                    result = result + "\n++++++++++  灵活排位  ++++++++++\n{0}\n<a:AnyaYay:1040000061033168978> 赢: {1}\n<a:UmaruChanCry:1040000749100343316> 输: {2}\n<:percent:1040001016759861379> 胜率: {3}".format(msg['FLEX']['灵活'], msg['FLEX']['赢'],msg['FLEX']['输'],msg['FLEX']['胜率'])
+                
+                else:
+                    result = result + "\n++++++++++  没有足够的灵活排位记录  ++++++++++"
+                
+                result = result + "\n==================== 🔥 账户信息 🔥 ===================="
+                await message.channel.send(result)
+                
+            else:
+                await message.channel.send('未找到相关账号，请仔细检查~')
+                
+        elif message.content.startswith('$icon'):
+            icon_url = "https://cdn.discordapp.com/emojis/577910564773429278.webp?size=56&quality=lossless"
+            await message.channel.send(icon_url)   
         else:
             await message.channel.send('抱歉还未学会这条命令~')
             
@@ -249,6 +279,6 @@ async def on_message(message):
         
 # Discord Bot Token
 # Read from Token.txt file and keep it safe
-token_file = open("./configs/Token.txt", "r")
+token_file = open("./config/Token.txt", "r")
 token = token_file.read()
 client.run(token)
