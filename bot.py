@@ -22,6 +22,7 @@ import yaml
 
 from Functions import league
 from Functions import helpCommand
+from Functions import chatGPT
 # Version
 version = 'beta-0.1'
 teamT1 = 0
@@ -224,6 +225,30 @@ async def on_message(message):
             view.add_item(selectMenu)
             
             await message.channel.send(view = view)
+        
+        # elif message.content.startswith('$chatGPT'):
+        #     msg = message.content.split("$chatGPT")[1]
+        #     code = chatGPT.AICodeCompletion(msg)
+        #     # TODO 暂时不管其他的 response，默认返回成功 只返回 code
+        #     result = "```python\n" + code + "\n```"
+        #     await message.channel.send(result)
+        
+        elif message.content.startswith('$chatGPT'):
+            msg = message.content.split("$chatGPT")[1]
+            result = "..."
+            if "QA" in msg:
+                msg_QA = msg.split("QA")[1]
+                
+                result = chatGPT.QAService(msg_QA)
+                if "ERROR" in msg_QA:
+                    result = "Timeout 该 QA 程序超时(20S)，请更换问题或稍后再试~"
+                
+            elif "code" in msg:
+                msg_code = msg.split("code")[1]
+                code = chatGPT.AICodeCompletion(msg_code)
+            # TODO 暂时不管其他的 response，默认返回成功 只返回回答
+                result = "```python\n" + code + "\n```"
+            await message.channel.send(result)   
         
         elif message.content.startswith('$info'):# Lemon Sodà
             
