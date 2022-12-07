@@ -173,6 +173,8 @@ def displayTargetAccRankInfo(name):
 ##############################################################
 def displayCurrentMatchPlayersInfo(name):
     players = getCurrentMatchPlayers(name)
+    if players == 'Target player is not in a game':
+        return players
     result = {}
     for i in players:
         result[i] = displayTargetAccRankInfo(i)
@@ -183,3 +185,4 @@ def displayCurrentMatchPlayersInfo(name):
 # print(getLeagueAccountByName("UtopiaZeta"))
 # print()
 #print(displayCurrentMatchPlayersInfo("Maple Bookmark"))
+# print(displayCurrentMatchPlayersInfo("tokyoni99a"))
