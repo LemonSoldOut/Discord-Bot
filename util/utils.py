@@ -18,6 +18,16 @@ def checkDiscordInput(msg):
       'SHELL':'shell'
       }
     return switch.get(msg,"Invalid input")
+# if __name__ == "__main__":
+#     print(checkDiscordInput(1))
 
-if __name__ == "__main__":
-    print(checkDiscordInput(1))
+def checkOperatingSystem():
+  if os.name == 'posix':
+    os_name = 'linux' 
+  elif os.name ==  'nt':
+    os_name = 'windows'
+  else:
+    os_name = 'mac_os'
+  return os_name
+
+

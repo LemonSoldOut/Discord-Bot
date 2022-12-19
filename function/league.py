@@ -19,9 +19,14 @@ import os
 
 abs_path = os.path.dirname(os.path.dirname((os.path.abspath(__file__))))
 
-# BUG: Windows path (not compatible for all platforms)
+if os.name == 'nt':
+    config_file_path = abs_path + "\\config\\config.yaml"
+elif os.name == 'posix':
+    config_file_path = abs_path + "/config/config.yaml"
+else:
+    print("Error: 未知系统！")
+    config_file_path = ''
 
-config_file_path = abs_path + "\\config\\config.yaml"
 with open(config_file_path) as file:
     config = yaml.safe_load(file)
 

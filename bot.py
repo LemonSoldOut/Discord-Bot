@@ -22,10 +22,10 @@ import yaml
 
 import asyncio
 
-from Functions import league
-from Functions import helpCommand
-from Functions import chatGPT
-
+from function import league
+from function import helpCommand
+from function import chatGPT
+from util import utils
 # Discord Bot Token
 # Read from Token.txt file and keep it safe
 # token_file = open("./config/Token.txt", "r")
@@ -53,11 +53,14 @@ chatGPT_token = getToken("chatGPT")
 scope_id = getToken("scope")
 
 bot = interactions.Client(dicord_token)
+bot_name = "今日摸鱼"
+
+os_name = utils.checkOperatingSystem()
 
 @bot.event
 async def on_ready():
     current_time = datetime.datetime.now()
-    print(f'\n[机器人]\t今日摸鱼 已上线...\n[USA BOS]\t', current_time,'\n')
+    print(f'\n[机器人]\t{bot_name} 已上线...\n[USA BOS]\t', current_time,f'\n[操作系统]\t{os_name}')
 
 
 @bot.command(
