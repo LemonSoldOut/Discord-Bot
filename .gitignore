@@ -3,4 +3,4 @@ log/*
 resource/*
 data/*
 config/*
-Functions/__pycache__/
+*/__pycache__/
