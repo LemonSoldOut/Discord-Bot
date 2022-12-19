@@ -1,5 +1,6 @@
 # Discord Bot
 > Discord 多功能机器人 - 今日摸鱼
+> # Todo
 ## 1. 环境准备
 - 由于本机器人使用 Python 编程语言进行构建，所以我们所有环境都基于 Python 3.X 版本准备
 
