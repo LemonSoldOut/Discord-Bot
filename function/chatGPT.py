@@ -131,4 +131,4 @@ def translationService(chatGPT_token, to, content:str):
     return res["choices"][0]["text"]
 
 # print(QAService("对猫毛过敏的人适合养布偶猫嘛？"))
-# print(AICodeCompletion('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',"Python", "编写贪吃蛇"))
+# print(AICodeCompletion('token',"Python", "编写贪吃蛇"))
