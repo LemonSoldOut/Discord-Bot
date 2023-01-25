@@ -13,11 +13,14 @@
 
 # import modules
 # Discord Interactions
+# Github https://discord-interactions.readthedocs.io/en/latest/api.html
+
 import interactions
 from interactions import autodefer
 
 import datetime
 import os
+import random
 import yaml
 
 import asyncio
@@ -56,6 +59,7 @@ bot = interactions.Client(dicord_token)
 bot_name = "今日摸鱼"
 
 os_name = utils.checkOperatingSystem()
+embed_color_list = [0,1752220,1146986,5763719,2067276,3447003,2123412,10181046,7419530,15277667,11342935,15844367,12745742,15105570,11027200,15548997,10038562,9807270,9936031,8359053,12370112,3426654,2899536,16776960]
 
 @bot.event
 async def on_ready():
@@ -73,6 +77,7 @@ async def help_command(ctx: interactions.CommandContext):
     await asyncio.sleep(1)
     res = helpCommand.help()
     await ctx.send(res)
+    
     
 
 @bot.command(
@@ -94,34 +99,87 @@ async def help_command(ctx: interactions.CommandContext, choice:int):
     await ctx.send("还没做出来!")
 
 @bot.command(
-    name = "music",
-    description = "闲暇之际, 不来点小游戏开心一下?",
+    name = "play",
+    description = "音乐播放模块",
     #scope = scope_id
     options = [
         interactions.Option(
             type = interactions.OptionType.STRING,
-            name = "action",
-            description = "执行的操作",
-            required = True
-        ),
-        interactions.Option(
-            type = interactions.OptionType.STRING,
             name = "name",
-            description = "歌名",
-            required = True
+            description = "网址 or BV (Todo 歌名)",
+            required = False
         ),
         interactions.Option(
             type = interactions.OptionType.STRING,
             name = "source",
-            description = "渠道(前期应该默认只有一个音乐的 API 封装吧)",
+            description = "渠道(暂时默认 Bilibili)",
             required = False
         ),
     ]
 )
 @autodefer()
-async def help_command(ctx: interactions.CommandContext, action:str, name:str, source=""):
+async def music_player(ctx: interactions.CommandContext, name:str, source="bilibili"):
+    # await asyncio.sleep(3)
+    
+    # await ctx.send(g)
+    # voice_channel.play(discord.FFmpegPCMAudio(executable="ffmpeg", source="C:\\Users\\lemon\\Desktop\\lemon\\Discord-Bot\\function\\music\\download.mp3"))
+    
+    random_number = random.randint(1,100)
+    color_value = embed_color_list[random_number % len(embed_color_list)]
+    # print(color_value)
+    
+    #Todo bot connect to voice channel
+    #Todo bot play audio file
+    # WARNING　目前来看，这个 Discord 模块并没有 audio和 voice channel 的功能
+    # Github https://github.com/interactions-py/voice
+
+    
+    url = "https://fastly.jsdelivr.net/gh/lemonsoldout/pictures@main/16708321871771.jpeg"
+    embeds = interactions.Embed(
+                title="音乐模块",
+                description="播放",
+                color = color_value,
+                image = interactions.EmbedImageStruct(
+                    url = url,
+                    height = 300,
+                    width = 250,
+                ),
+                # author = interactions.EmbedAuthor(
+                #     name="柠檬汽水不要汽水#5149",
+                # ),
+                # footer=interactions.EmbedFooter(
+                #     text="这是一个脚注",
+                # ),
+                fields = [interactions.EmbedField(
+                    name ="歌曲名",
+                    value = "歌手名-时长",
+                    inline = False,
+                )],
+                
+    )
+    await ctx.send(embeds=embeds)
+
+@bot.command(
+    name = "stop",
+    description = "音乐模块",
+)
+@autodefer()
+async def music_stop(ctx: interactions.CommandContext, source="bilibili"):
     await asyncio.sleep(1)
-    await ctx.send("还没做出来!")
+    
+    random_number = random.randint(1,100)
+    color_value = embed_color_list[random_number % len(embed_color_list)]
+    # print(color_value)
+    
+    #Todo audio stop
+    
+    embeds = interactions.Embed(
+                title="音乐模块",
+                description="已停止",
+                color = color_value,
+    )
+    await ctx.send(embeds=embeds)
+
 
 @bot.command(
     name = "lol",
@@ -196,7 +254,33 @@ async def chatGPT_code(ctx: interactions.CommandContext, language:str, question:
     
     msg = "问题:\t{0}\n语言:\t{1}\n".format(question, language) + "```{0}\n{1}\n```".format(language,answer)
 
-    await ctx.send(msg)
+    random_number = random.randint(1,100)
+    color_value = embed_color_list[random_number % len(embed_color_list)]
+
+    # url = "https://fastly.jsdelivr.net/gh/lemonsoldout/pictures@main/16708321871771.jpeg"
+    embeds = interactions.Embed(
+                title="ChatGPT AI 模块",
+                # description = question,
+                color = color_value,
+                # image = interactions.EmbedImageStruct(
+                #     url = url,
+                #     height = 300,
+                #     width = 250,
+                # ),
+                # author = interactions.EmbedAuthor(
+                #     name="柠檬汽水不要汽水#5149",
+                # ),
+                # footer=interactions.EmbedFooter(
+                #     text="这是一个脚注",
+                # ),
+                fields = [interactions.EmbedField(
+                    name = "编程",
+                    value = msg,
+                    inline = False,
+                )],
+                
+    )
+    await ctx.send(embeds=embeds)
     
     
 @bot.command(
@@ -218,9 +302,22 @@ async def chatGPT_chat(ctx: interactions.CommandContext, question:str):
 
     await asyncio.sleep(5)
     answer = chatGPT.chatService(chatGPT_token, question)
-    msg = "聊天/问答:\t{0}\n{1}".format(question, answer)
-        
-    await ctx.send(msg)
+    msg = "{0}\n{1}".format(question, answer)
+    
+    random_number = random.randint(1,100)
+    color_value = embed_color_list[random_number % len(embed_color_list)]
+      
+    embeds = interactions.Embed(
+                title="ChatGPT AI 模块",
+                color = color_value,
+                fields = [interactions.EmbedField(
+                    name = "聊天/问答",
+                    value = msg,
+                    inline = False,
+                )],
+                
+    )
+    await ctx.send(embeds=embeds)
     
     
     
