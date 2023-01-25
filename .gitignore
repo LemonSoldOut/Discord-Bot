@@ -4,3 +4,4 @@ resource/*
 data/*
 config/*
 */__pycache__/
+*.mp3
