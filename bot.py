@@ -203,27 +203,29 @@ async def music_stop(ctx: interactions.CommandContext, source="bilibili"):
 )
 @autodefer()
 async def league_command(ctx: interactions.CommandContext, rule:str, username:str):
-    await ctx.send("暂时无法使用, maybe 明天修复! (也许吧...)")
-    # if rule == "1":
-    #     await asyncio.sleep(5)
-    #     res = league.displayCurrentMatchPlayersInfo(username)
-    #     if res in "Target Account Not Found":
-    #         msg = "未找到用户!"
+    msg = ""
+    
+    if rule == "1":
+        await asyncio.sleep(5)
+        res = league.displayCurrentMatchPlayersInfo(username)
+        if res in "Target Account Not Found":
+            msg = "未找到用户!"
         
-    # elif rule == "2":
-    #     await asyncio.sleep(5)
-    #     res = league.displayTargetAccRankInfo(username)
-    #     res = league.displayCurrentMatchPlayersInfo(username)
-    #     if res in "Target Account Not Found":
-    #         msg = "未找到用户!"
-    #     else:
-    #         msg = "用户名:\t{0}\n等级:\t{1}\n".format(res["用户名"], res["等级"])
-    #         if "SOLO" in res:
-    #             msg = msg + "单双:\t{0}\n赢:\t{1}\n输:\t{2}\n胜率:\t{3}".format(res["SOLO"]["单双"],res["SOLO"]["赢"],res["SOLO"]["输"],res["SOLO"]["胜率"])
+    elif rule == "2":
+        await asyncio.sleep(5)
+        res = league.displayTargetAccRankInfo(username)
+        res = league.displayCurrentMatchPlayersInfo(username)
+        if res in "Target Account Not Found":
+            msg = "未找到用户!"
+        else:
+            msg = "用户名:\t{0}\n等级:\t{1}\n".format(res["用户名"], res["等级"])
+            if "SOLO" in res:
+                msg = msg + "单双:\t{0}\n赢:\t{1}\n输:\t{2}\n胜率:\t{3}".format(res["SOLO"]["单双"],res["SOLO"]["赢"],res["SOLO"]["输"],res["SOLO"]["胜率"])
         
-    # else:
-    #     msg = "请输入正确的请求类型! 1. 当前活跃匹配查询 2. 账户信息查询"
-    # await ctx.send(msg)
+    else:
+        msg = "请输入正确的请求类型! 1. 当前活跃匹配查询 2. 账户信息查询"
+    
+    await ctx.send(msg)
         
 
 @bot.command(
@@ -346,10 +348,22 @@ async def chatGPT_translation(ctx: interactions.CommandContext, to:str, content:
     
     await asyncio.sleep(5)
     answer = chatGPT.translationService(chatGPT_token, to, content)
-    msg = "翻译:\t{0}\n目标语言:\t{1}文\n{2}".format(content, to, answer)
-        
-    await ctx.send(msg)
-
+    msg = "原文:\t{0}\nTo:\t{1}文\n{2}".format(content, to, answer)
+    
+    random_number = random.randint(1,100)
+    color_value = embed_color_list[random_number % len(embed_color_list)]
+      
+    embeds = interactions.Embed(
+                title="ChatGPT 翻译模块",
+                color = color_value,
+                fields = [interactions.EmbedField(
+                    name = "翻译",
+                    value = msg,
+                    inline = False,
+                )],
+                
+    )
+    await ctx.send(embeds=embeds)
 
 # 启动 Discord 机器人   
 bot.start()
